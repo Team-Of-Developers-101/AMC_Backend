@@ -8,7 +8,8 @@ from amc.configs.config import configs
 from flasgger import Swagger
 from amc.models import User
 from amc.routes.v1.welcome import welcome
-from amc.utils.utils import resource_not_found, internal_server_error
+from amc.routes.v1.user import user_bp
+from amc.utils.utils import resource_not_found, internal_server_error, wrong_logins, correct_logins
 from amc.configs.alchemyinit import db, init_app
 from amc.configs.swagger import template, swagger_config
 
@@ -22,6 +23,9 @@ def create_app():
     db.app = app
     init_app(app)
     app.register_blueprint(welcome, url_prefix='/api/v1')
+    app.register_blueprint(user_bp, url_prefix='/api/v1/')
+    app.register_error_handler(401, wrong_logins)
+    app.register_error_handler(401, correct_logins)
     app.register_error_handler(404, resource_not_found)
     app.register_error_handler(500, internal_server_error)
 

@@ -34,3 +34,9 @@ def internal_server_error(e):
         f"\n{'='*30} SERVER ERROR {datetime.datetime.now()} {'='*30}\n\n {traceback.format_exc()}\n{'='*24} END SERVER ERROR {'='*24}\n",
     )
     return error_response(message="Internal server error.", status_code=500)
+
+def wrong_logins(e):
+    return error_response(message="Invalid username or password", status_code=401)
+
+def correct_logins(e):
+    return custom_response(message="Login Successful!", status_code=200)

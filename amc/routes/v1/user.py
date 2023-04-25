@@ -1,8 +1,8 @@
-# from flask import Blueprint
-# from amc.calculations.v1.users import add_user, all_users
+from flask import Blueprint
+from calculator.v1.user import register, login
 
 
-# user_bp = Blueprint("user", __name__)
+user_bp = Blueprint("user", __name__)
 
-# user_bp.route("/", methods=["GET"], strict_slashes=False)(all_users)
-# user_bp.route("/new", methods=["POST"], strict_slashes=False)(add_user)
+user_bp.route("/register", methods=["POST"], strict_slashes=False)(register)
+user_bp.route("/login", methods=["POST"], strict_slashes=False)(login)
