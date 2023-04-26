@@ -1,6 +1,8 @@
 """
 User class
 """
+import os
+from datetime import datetime
 from amc.configs.alchemyinit import db
 from sqlalchemy import Enum, func, text
 from uuid import uuid4
@@ -11,17 +13,27 @@ from flask_bcrypt import generate_password_hash
 class User(db.Model, UserMixin):
     """model for users"""
     __tablename__ = "users"
-    id = db.Column(db.String(length=50), primary_key=True,
-                   default=str(uuid4), unique=True)
+    id = db.Column(
+        db.String(length=50), primary_key=True,
+        default=lambda: str(uuid4), unique=True
+    )
     username = db.Column(db.String(length=50), nullable=False, unique=True)
     email = db.Column(db.String(length=50), nullable=False, unique=True)
     password = db.Column(db.String(250))
-    gender = db.Column(Enum("Male", "Female", "Others"))
+    gender = db.Column(Enum("Male", "Female"))
     created_at = db.Column(db.DateTime, server_default=func.now())
-    updated_at = db.Column(
-        db.DateTime,
-        server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    )
+    if os.getenv("DB_URI"):
+        updated_at = db.Column(
+            db.DateTime,
+            server_default=text(
+                "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+        )
+    else:
+        updated_at = db.Column(
+            db.DateTime, onupdate=datetime.utcnow, nullable=True)
+    # state_id = db.Column(db.Integer, db.ForeignKey('state.id'))
+    # TODO In states table
+    # users = db.relationship("User", backref='states')
 
     def __init__(self, id, username, email, password, gender) -> None:
         self.id = id
