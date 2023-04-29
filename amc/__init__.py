@@ -1,25 +1,34 @@
+"""Application Factory
+- Copyright (c) 2023 - present amc.com
 """
-Copyright (c) 2023 - present amc.com
-"""
-import os
+
 from flask import Flask
-from flask_cors import CORS, cross_origin
 from amc.configs.config import configs
-from flasgger import Swagger
 from amc.models import User
 from amc.routes.v1.welcome import welcome
 from amc.routes.v1.user import user_bp
-from amc.utils.utils import resource_not_found, internal_server_error, wrong_logins, correct_logins
-from amc.configs.alchemyinit import db, init_app
-from amc.configs.swagger import template, swagger_config
+from amc.utils.utils import (
+    constants, resource_not_found,
+    internal_server_error, wrong_logins, correct_logins
+)
+from amc.configs.extensions import db, init_app
 
 
 def create_app():
-    environ = os.getenv("ENVIRONMENT")
+    """
+    The create_app function is the entry point for our application.
+    It takes no arguments and returns a Flask object that we can use to run
+    our app.
+    The function does the following:
+    * Creates an instance of Flask using __name__ as the argument, which
+        tells flask where to look for templates and static files
+        (among other things).
+
+    * return: An instance of the flask class
+    """
+    environ = constants.environ
     app = Flask(__name__)
-    cors = CORS(app, resources={r"/api/v1*": {"origins": "*"}})
     app.config.from_object(configs.get(environ))
-    Swagger(app, config=swagger_config, template=template)
     db.app = app
     init_app(app)
     app.register_blueprint(welcome, url_prefix='/api/v1')

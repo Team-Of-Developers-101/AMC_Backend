@@ -3,7 +3,7 @@ User class
 """
 import os
 from datetime import datetime
-from amc.configs.alchemyinit import db
+from amc.configs.extensions import db
 from sqlalchemy import Enum, func, text
 from uuid import uuid4
 from flask_login import UserMixin

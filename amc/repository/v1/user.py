@@ -2,7 +2,7 @@ import json
 from uuid import uuid4
 from marshmallow import ValidationError
 from sqlalchemy import desc
-from amc.configs.alchemyinit import db
+from amc.configs.extensions import db
 from amc.models.schema.user import UserSchema
 from amc.models.schema.user import LoginSchema
 from amc.models.v1.user import User
@@ -40,7 +40,6 @@ class UserRepo:
             return wrong_logins()
         return correct_logins()
 
-
     @staticmethod
     def create_user(validated_user):
         new_user = User(**validated_user)
@@ -48,4 +47,3 @@ class UserRepo:
         db.session.commit()
         resp_data = {**user_schema.dump(new_user)}
         return resp_data
-
