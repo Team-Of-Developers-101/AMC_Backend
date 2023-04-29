@@ -12,6 +12,7 @@ app = create_app()
 
 
 if __name__ == "__main__":
+    # print(app.url_map)  # uncomment to show all available endpoints/routes
     app.run(
         host='0.0.0.0',
         port=os.getenv('PORT', '5000')
